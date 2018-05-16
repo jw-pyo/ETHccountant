@@ -1,0 +1,25 @@
+{
+  "name": "ethccountant",
+  "version": "1.0.0",
+  "description": "Tracing Ethereum network's event log periodically by local trigger.",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jw-pyo/ETHccountant.git"
+  },
+  "keywords": [
+    "ethereum"
+  ],
+  "author": "Jungwoo Pyo <wjddn1801@snu.ac.kr>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/jw-pyo/ETHccountant/issues"
+  },
+  "homepage": "https://github.com/jw-pyo/ETHccountant#readme"
+}
