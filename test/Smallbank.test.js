@@ -24,6 +24,8 @@ contract('Smallbank', function(accounts) {
             ]
         });*/
         await smallbank.updateBalance(accounts[1], 20000, {from: owner})
+        await smallbank.updateBalance(accounts[1], 20000, {from: owner})
+        await smallbank.updateBalance(accounts[1], 20000, {from: owner})
         var Event = smallbank.UpdateBalance({}, {fromBlock: 0, toBlock: 'latest'});
         Event.get(function (err, results) {
             if(!err) {

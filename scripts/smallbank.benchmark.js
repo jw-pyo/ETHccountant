@@ -1,39 +1,46 @@
-/* This file is reference for using smart contract function after migration 
- * */
-var accounts = ["0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
-                "0xf17f52151EbEF6C7334FAD080c5704D77216b732",
-                "0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef"];
+//const web3 = require("web3");
+var accounts = [
+"0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
+"0xffcf8fdee72ac11b5c542428b35eef5769c409f0",
+"0x22d491bde2303f2f43325b2108d26f1eaba1e32b",
+"0xe11ba2b4d45eaed5996cd0823791e0c93114882d",
+"0xd03ea8624c8c5987235048901fb614fdca89b117",
+"0x95ced938f7991cd0dfcb48f0a06a40fa1af46ebc",
+"0x3e5e9111ae8eb78fe1cc3bb8915d5d461f3ef9a9",
+"0x28a8746e75304c0780e011bed21c72cd78cd535e",
+"0xaca94ef8bd5ffee41947b4585a84bda5a3d3da6e",
+"0x1df62f291b2e969fb0849d99d9ce41e2f137006e"
+];
 
 
-var fs = require("fs");
 var Web3 = require("web3");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+var fs = require("fs");
 
-var gmed_json = JSON.parse(fs.readFileSync("../build/contracts/Gmed.json"));
-var crowd_json = JSON.parse(fs.readFileSync("../build/contracts/Crowdsale.json"));
-var gmed_abi = gmed_json.abi;
-var crowd_abi = crowd_json.abi;
-var gmed_Contract = web3.eth.contract(gmed_abi);
-var crowd_Contract = web3.eth.contract(crowd_abi);
-//If you wanna import already deployed contract : use "at"
-gmed_contract = gmed_Contract.at("0xf25186b5081ff5ce73482ad761db0eb0d25abfbf");
-crowd_contract = crowd_Contract.at("0x9fbda871d559710256a2502a2517b794b482db40");
-//If not, use "new"
-//contract = Contract.new("contract's constructor arguments, {data: byteCode, from: web3.eth.accounts[0], gas: 4700000});
+const smallbank = artifacts.require("./smallbank.sol");
+var filepath = "../client/log/event.log";
+var file = new File(filepath);
 
-//console.log(crowd_contract.getTotalSupply());
-/*Crowdsale.sol*/
-//hasEnded() bool
-//getTokenAmount(ether) uint256
+file.open("w");
 
-console.log(crowd_contract.hasEnded());
-console.log(gmed_contract.getBalanceOf(accounts[0]));
-//console.log(crowd_contract.forwardFunds(5));
-//call the fallback function
-web3.eth.sendTransaction({
-    from: accounts[1],
-    to: crowd_contract.address,
-    //data: ,
-    //gas: ,
-    value: web3.toWei(70, 'ether')
-});
+
+var sb_json = JSON.parse(fs.readFileSync("../build/contracts/Small.json"));
+var sb_abi = sb_json.abi;
+var sb_Contract = web3.eth.contract(sb_abi);
+sb = sb_Contract.at("0xcfeb869f69431e42cdb54a4f4f105c19c080a601");
+
+sb.updatebalance(accounts[1], 20000, {from: owner})
+sb.updatebalance(accounts[1], 30000, {from: owner})
+sb.updatebalance(accounts[1], 40000, {from: owner})
+
+var event = sb.updatebalance({}, {fromblock: 0, toblock: 'latest'});
+
+event.get(function (err, results) {
+    if(!err) {
+        results.foreach(result => file.writeln(result.args))
+    }
+})
+
+file.close();
+
+
