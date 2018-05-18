@@ -1,5 +1,6 @@
-//const web3 = require("web3");
 var accounts = [
+"0x627306090abaB3A6e1400e9345bC60c78a8BEf57",
+"0xf17f52151EbEF6C7334FAD080c5704D77216b732",
 "0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1",
 "0xffcf8fdee72ac11b5c542428b35eef5769c409f0",
 "0x22d491bde2303f2f43325b2108d26f1eaba1e32b",
@@ -17,30 +18,59 @@ var Web3 = require("web3");
 var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 var fs = require("fs");
 
-const smallbank = artifacts.require("./smallbank.sol");
-var filepath = "../client/log/event.log";
-var file = new File(filepath);
-
-file.open("w");
+//const smallbank = artifacts.require("./smallbank.sol");
+var logfile = fs.createWriteStream("../client/log/event.log");
+logfile.on('error', (err) => { console.log(err) });
 
 
-var sb_json = JSON.parse(fs.readFileSync("../build/contracts/Small.json"));
+var sb_json = JSON.parse(fs.readFileSync("../build/contracts/Smallbank.json"));
 var sb_abi = sb_json.abi;
-var sb_Contract = web3.eth.contract(sb_abi);
-sb = sb_Contract.at("0xcfeb869f69431e42cdb54a4f4f105c19c080a601");
+var sb = new web3.eth.Contract(sb_abi, "0x8065f4c7b8c2bf53561af92d9da2ea022a0b28ca", {
+    from: accounts[0]
+});
 
-sb.updatebalance(accounts[1], 20000, {from: owner})
-sb.updatebalance(accounts[1], 30000, {from: owner})
-sb.updatebalance(accounts[1], 40000, {from: owner})
 
-var event = sb.updatebalance({}, {fromblock: 0, toblock: 'latest'});
+sb.methods.updateBalance(accounts[1], 20000).send({from: accounts[0]})
+/*.on('receipt', function(receipt) {
+    console.log(receipt);
+})*/
+sb.methods.updateBalance(accounts[1], 30000).send({from: accounts[0]})
+sb.methods.updateBalance(accounts[1], 40000).send({from: accounts[0]})
 
-event.get(function (err, results) {
-    if(!err) {
-        results.foreach(result => file.writeln(result.args))
-    }
+sb.getPastEvents('UpdateBalance', {
+    fromBlock: 0,
+    toBlock: "latest"
+}, function(error, events) { 
+    events.forEach(each_event => logfile.write(JSON.stringify(each_event.returnValues)+"\n"))
+})
+.then(() => {
+    logfile.end()
 })
 
-file.close();
 
+
+
+
+/*
+var update_event = sb.events.UpdateBalance({  
+    fromBlock: 0,
+    toBlock: 'latest'
+}, function(err, events){ console.log(events); })
+.on('data', function(event){
+    console.log(event);
+})
+.on('error', console.error);
+*/
+
+
+/*
+event.get(function (err, results) {
+    if(!err) {
+        results.foreach(result => fs.writeFile(filepath, result.args, function(err) {
+            if(!err) console.log(result.args, filepath);
+        })
+                )
+    }
+})
+*/
 
