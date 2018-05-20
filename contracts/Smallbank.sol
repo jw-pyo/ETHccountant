@@ -23,12 +23,10 @@ contract Smallbank {
         emit Almagate(addr0, addr1);
     }
 
-    function getBalance(address _addr) public constant returns (uint256 balance) {
+    function getBalance(address _addr) public view returns (uint256) {
         uint256 bal1 = savingStore[_addr];
         uint256 bal2 = checkingStore[_addr];
-
-        balance = bal1 + bal2;
-        return balance;
+        return bal1 + bal2;
     }
 
     function updateBalance(address addr, uint amount) public returns(bool) {

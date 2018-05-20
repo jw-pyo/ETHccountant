@@ -10,7 +10,7 @@ var logfile = fs.createWriteStream("../client/log/event.log");
 
 var sb_json = JSON.parse(fs.readFileSync("../build/contracts/Smallbank.json"));
 var sb_abi = sb_json.abi;
-var sb = new web3.eth.Contract(sb_abi, "0x8065f4c7b8c2bf53561af92d9da2ea022a0b28ca", {
+var sb = new web3.eth.Contract(sb_abi, "0xf9630cb69194fce7f8f82cb2355356adb822a5f0", {
     from: accounts[0]
 });
 
@@ -26,7 +26,10 @@ sb.getPastEvents('UpdateBalance', {
     fromBlock: 0,
     toBlock: "latest"
 }, function(error, events) { 
-    events.forEach(each_event => logfile.write(JSON.stringify(each_event.returnValues)+"\n"))
+    events.forEach(each_event => {
+        console.log(JSON.stringify(each_event.returnValues))
+        logfile.write(JSON.stringify(each_event.returnValues)+"\n")
+    })
 })
 .then(() => {
     logfile.end()

@@ -74,7 +74,7 @@ class DB(object):
         return posts
     def create_index(self, index_col, sort=pymongo.ASCENDING, unique=True):
         ret = self.db.profiles.create_index([(index_col, sort)], unique=unique)
-        print ret
+        print(ret)
     def index_information(self):
         ret = self.db.profiles.index_information()
         print(ret)
@@ -92,14 +92,14 @@ if __name__ == '__main__':
     #coll_name = str(raw_input("Collection name: ")) # table
     coll_name = "test"
     db.use_coll(coll_name)
-    # print db.insert_one("""
-    # {
-    #    "username" : "Alice",
-    #    "balance" : "0.55",
-    #    "account" : "0x51942B862fBbd9b5152252A061DEDFFbFEC0b04D"
-    # }
-    # """
-    # )
+    db.insert_one("""
+    {
+       "username" : "Alice",
+       "balance" : "0.55",
+       "account" : "0x51942B862fBbd9b5152252A061DEDFFbFEC0b04D"
+    }
+    """
+    )
 
     db.retrieve_many()
     # db.create_index("ababab")
