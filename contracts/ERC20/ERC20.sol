@@ -66,9 +66,9 @@ contract ERC20 {
   }
 
   function balanceOf(address who) public view returns (uint256) {
-    return balances[_owner];
+    return balances[owner_];
   }
-  
+
   function transfer(address to, uint256 value) public returns (bool) {
     require(to != address(0));
     require(value <= balances[msg.sender]);
@@ -93,8 +93,8 @@ contract ERC20 {
     allowed[from][msg.sender] = allowed[from][msg.sender].sub(value);
     emit Transfer(from, to, value);
     return true;
-  }  
-  
+  }
+
   function approve(address spender, uint256 value) public returns (bool) {
     allowed[msg.sender][spender] = value;
     emit Approval(msg.sender, spender, value);
